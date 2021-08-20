@@ -12,9 +12,24 @@ from optparse import OptionParser
 from client import Client
 from aioconsole import ainput
 
+import yaml
+
+# Funcion para cargar los archivos de configuracion
+def loadConfig():
+    lector_topo = open("topo.txt", "r", encoding="utf8")
+    lector_names = open("names.txt", "r", encoding="utf8")
+    topo_string = lector_topo.read()
+    names_string = lector_names.read()
+    topo_yaml = yaml.load(topo_string, Loader=yaml.FullLoader)
+    names_yaml = yaml.load(names_string, Loader=yaml.FullLoader)
+    return topo_yaml, names_yaml
+
+
 # Funcion para manejar el cliente
 async def main(xmpp: Client):
     corriendo = True
+    print(xmpp.topo)
+    print(xmpp.names)
     while corriendo:
         print("""
         *************************************************
@@ -60,6 +75,7 @@ if __name__ == "__main__":
     
     opts, args = optp.parse_args()
 
+    topo, names = loadConfig()
     if opts.jid is None:
         opts.jid = input("Ingrese su nombre de usuario: ")
     if opts.password is None:
@@ -68,7 +84,7 @@ if __name__ == "__main__":
     logging.basicConfig(level=opts.loglevel,
                         format='%(levelname)-8s %(message)s')
 
-    xmpp = Client(opts.jid, opts.password)
+    xmpp = Client(opts.jid, opts.password, topo, names)
     xmpp.connect() 
     xmpp.loop.run_until_complete(xmpp.connected_event.wait())
     xmpp.loop.create_task(main(xmpp))

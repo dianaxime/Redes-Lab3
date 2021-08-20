@@ -12,9 +12,11 @@ import slixmpp
 
 
 class Client(slixmpp.ClientXMPP):
-    def __init__(self, jid, password):
+    def __init__(self, jid, password, topo, names):
         super().__init__(jid, password)
         self.received = set()
+        self.topo = topo
+        self.names = names
         
         # Manejar los eventos
         self.connected_event = asyncio.Event()
