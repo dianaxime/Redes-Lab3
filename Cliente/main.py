@@ -16,8 +16,8 @@ import yaml
 
 # Funcion para cargar los archivos de configuracion
 def loadConfig():
-    lector_topo = open("topo-demo.txt", "r", encoding="utf8")
-    lector_names = open("names-demo.txt", "r", encoding="utf8")
+    lector_topo = open("topo.txt", "r", encoding="utf8")
+    lector_names = open("names.txt", "r", encoding="utf8")
     topo_string = lector_topo.read()
     names_string = lector_names.read()
     topo_yaml = yaml.load(topo_string, Loader=yaml.FullLoader)
@@ -28,8 +28,8 @@ def loadConfig():
 # Funcion para manejar el cliente
 async def main(xmpp: Client):
     corriendo = True
-    print(xmpp.topo)
-    print(xmpp.names)
+    # print(xmpp.topo)
+    # print(xmpp.names)
     while corriendo:
         print("""
         *************************************************
@@ -65,9 +65,9 @@ if __name__ == "__main__":
 
     optp = OptionParser()
 
-    optp.add_option('-d', '--debug', help='set loggin to DEBUG',
-                    action='store_const', dest='loglevel',
-                    const=logging.DEBUG, default=logging.INFO)
+    # optp.add_option('-d', '--debug', help='set loggin to DEBUG',
+    #                action='store_const', dest='loglevel',
+    #                 const=logging.DEBUG, default=logging.INFO)
     optp.add_option("-j", "--jid", dest="jid",
                     help="JID to use")
     optp.add_option("-p", "--password", dest="password",
@@ -81,8 +81,8 @@ if __name__ == "__main__":
     if opts.password is None:
         opts.password = getpass.getpass("Ingrese su contraseña: ")  
 
-    logging.basicConfig(level=opts.loglevel,
-                        format='%(levelname)-8s %(message)s')
+    # logging.basicConfig(level=opts.loglevel,
+    #                    format='%(levelname)-8s %(message)s')
 
     xmpp = Client(opts.jid, opts.password, topo, names)
     xmpp.connect() 

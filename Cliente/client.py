@@ -10,6 +10,21 @@ from aioconsole import aprint
 
 import slixmpp
 
+########################################################
+#
+#               PROTOCOLO DE MENSAJES
+#
+# Tipo | Nodo fuente | Nodo destino | Saltos | Distancia | Listado de nodos | Mensaje
+#
+# Pueden haber tres tipos de mensajes:
+# 1. Reenviar
+# 2. Update
+# 3. ECO
+# EJ:
+# 1 | "dele18607@alumchat.xyz" | "gon18398@alumchat.xyz" | 5 | 10 | "A,B,C,D" | "Hola"
+#
+######################################################### 
+
 
 class Client(slixmpp.ClientXMPP):
     def __init__(self, jid, password, topo, names):
