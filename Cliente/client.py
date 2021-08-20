@@ -41,5 +41,10 @@ class Client(slixmpp.ClientXMPP):
     async def message(self, msg):
         if msg['type'] in ('normal', 'chat'):
             await aprint("\n{}".format(msg['body']))
+            await self.reply_message()
+
+    # Esta funcion la pueden usar para reenviar sus mensajes
+    async def reply_message(self):
+        pass
 
     

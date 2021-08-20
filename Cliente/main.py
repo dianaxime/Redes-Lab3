@@ -16,8 +16,8 @@ import yaml
 
 # Funcion para cargar los archivos de configuracion
 def loadConfig():
-    lector_topo = open("topo.txt", "r", encoding="utf8")
-    lector_names = open("names.txt", "r", encoding="utf8")
+    lector_topo = open("topo-demo.txt", "r", encoding="utf8")
+    lector_names = open("names-demo.txt", "r", encoding="utf8")
     topo_string = lector_topo.read()
     names_string = lector_names.read()
     topo_yaml = yaml.load(topo_string, Loader=yaml.FullLoader)
