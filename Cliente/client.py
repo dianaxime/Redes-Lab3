@@ -23,6 +23,7 @@ import slixmpp
 # EJ:
 # 1 | "dele18607@alumchat.xyz" | "gon18398@alumchat.xyz" | 5 | 10 | "A,B,C,D" | "Hola"
 #
+# 1|"dele18607@alumchat.xyz"|"gon18398@alumchat.xyz"|5|10|"A,B,C,D"|"Hola"
 ######################################################### 
 
 
@@ -55,11 +56,20 @@ class Client(slixmpp.ClientXMPP):
     # Recibir mensajes
     async def message(self, msg):
         if msg['type'] in ('normal', 'chat'):
-            await aprint("\n{}".format(msg['body']))
-            await self.reply_message()
+            #await aprint("\n{}".format(msg['body']))
+            await self.reply_message(msg['body'])
 
     # Esta funcion la pueden usar para reenviar sus mensajes
-    async def reply_message(self):
-        pass
+    async def reply_message(self, msg):
+        await aprint(msg)
+        message = msg.split('|')
+        if message[0] == '1':
+            print('Este es el metodo de reenviar')
+        elif message[0] == '2':
+            print('Este es el metodo de update')
+        elif message[0] == '3':
+            print('Este es el metodo de echo')
+        else:
+            pass
 
     
