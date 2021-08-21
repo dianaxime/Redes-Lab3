@@ -7,6 +7,7 @@
 import asyncio
 import logging
 from aioconsole import aprint
+from datetime import datetime
 
 import slixmpp
 
@@ -36,6 +37,7 @@ class Client(slixmpp.ClientXMPP):
         # Cambio en vez de recibir toda la red recibe su nodo y nodos asociados
         self.nodo = nodo
         self.nodes = nodes
+        self.schedule(name="menu", callback=self.menu, seconds=10, repeat=True)
         
         # Manejar los eventos
         self.connected_event = asyncio.Event()
@@ -49,6 +51,7 @@ class Client(slixmpp.ClientXMPP):
         self.register_plugin('xep_0030') # Service Discovery
         self.register_plugin('xep_0045') # Multi-User Chat
         self.register_plugin('xep_0199') # Ping
+
 
     # Iniciar sesion
     async def start(self, event):
@@ -73,7 +76,13 @@ class Client(slixmpp.ClientXMPP):
             print('Este es el metodo de update')
         elif message[0] == '3':
             print('Este es el metodo de echo')
+            now = datetime.now()
+            timestamp = datetime.timestamp(now)
+            print("timestamp =", timestamp)
         else:
             pass
+
+    def menu(self):
+        print("schedule prueba")
 
     
