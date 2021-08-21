@@ -28,11 +28,14 @@ import slixmpp
 
 
 class Client(slixmpp.ClientXMPP):
-    def __init__(self, jid, password, topo, names):
+    def __init__(self, jid, password, nodo, nodes):
         super().__init__(jid, password)
         self.received = set()
-        self.topo = topo
-        self.names = names
+        # self.topo = topo
+        # self.names = names
+        # Cambio en vez de recibir toda la red recibe su nodo y nodos asociados
+        self.nodo = nodo
+        self.nodes = nodes
         
         # Manejar los eventos
         self.connected_event = asyncio.Event()
@@ -63,6 +66,7 @@ class Client(slixmpp.ClientXMPP):
     async def reply_message(self, msg):
         await aprint(msg)
         message = msg.split('|')
+        await aprint(message)
         if message[0] == '1':
             print('Este es el metodo de reenviar')
         elif message[0] == '2':

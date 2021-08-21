@@ -24,12 +24,20 @@ def loadConfig():
     names_yaml = yaml.load(names_string, Loader=yaml.FullLoader)
     return topo_yaml, names_yaml
 
+# Funcion para conocer mi nodo y sus nodos asociados
+def getNodes(topo, names, user):
+    for key, value in names["config"].items():
+        if user == value:
+            return key, topo["config"][key]
 
 # Funcion para manejar el cliente
 async def main(xmpp: Client):
     corriendo = True
     # print(xmpp.topo)
     # print(xmpp.names)
+    # Cambio en vez de pasarle toda la red solo los nodos conectados
+    # print(xmpp.nodo)
+    # print(xmpp.nodes)
     while corriendo:
         print("""
         *************************************************
@@ -84,7 +92,9 @@ if __name__ == "__main__":
     # logging.basicConfig(level=opts.loglevel,
     #                    format='%(levelname)-8s %(message)s')
 
-    xmpp = Client(opts.jid, opts.password, topo, names)
+    nodo, nodes = getNodes(topo, names, opts.jid)
+
+    xmpp = Client(opts.jid, opts.password, nodo, nodes)
     xmpp.connect() 
     xmpp.loop.run_until_complete(xmpp.connected_event.wait())
     xmpp.loop.create_task(main(xmpp))
