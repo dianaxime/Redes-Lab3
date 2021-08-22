@@ -84,7 +84,23 @@ class Client(slixmpp.ClientXMPP):
         if message[0] == '1':
             print('Este es el metodo de reenviar')
             if self.algoritmo == '1':
-                pass
+                if message[2] == self.jid:
+                    print("Este mensaje es para mi >> " +  message[6])
+                else:
+                    if message[3] != '0':
+                        lista = message[4].split(",")
+                        if self.nodo not in lista:
+                            message[4] = message[4] + "," + str(self.nodo)
+                            message[3] = str(int(message[3]) - 1)
+                            StrMessage = "|".join(message)
+                            for i in self.nodes:
+                                self.send_message(
+                                    mto=self.names[i],
+                                    mbody=StrMessage,
+                                    mtype='chat' 
+                                )  
+                    else:
+                        pass
             elif self.algoritmo == '2':
                 pass
             elif self.algoritmo == '3':

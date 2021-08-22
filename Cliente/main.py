@@ -71,12 +71,19 @@ async def main(xmpp: Client):
                 mensaje = await ainput("Mensaje... ")
                 if (mensaje != 'volver') and len(mensaje) > 0:
                     if xmpp.algoritmo == '1':
-                        mensaje = "1|" + str(xmpp.jid) + "|" + str(destinatario) + str(xmpp.graph.number_of_nodes()) + "||" + str(xmpp.nodo) + "|" + str(mensaje)
-                    xmpp.send_message(
-                        mto=destinatario,
-                        mbody=mensaje,
-                        mtype='chat' 
-                    )
+                        mensaje = "1|" + str(xmpp.jid) + "|" + str(destinatario) + "|" + str(xmpp.graph.number_of_nodes()) + "||" + str(xmpp.nodo) + "|" + str(mensaje)
+                        for i in xmpp.nodes:
+                            xmpp.send_message(
+                                mto=xmpp.names[i],
+                                mbody=mensaje,
+                                mtype='chat' 
+                            )  
+                    else:
+                        xmpp.send_message(
+                            mto=destinatario,
+                            mbody=mensaje,
+                            mtype='chat' 
+                        )
                 elif mensaje == 'volver':
                     activo = False
                 else:
