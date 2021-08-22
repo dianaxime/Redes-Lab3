@@ -69,24 +69,27 @@ class Client(slixmpp.ClientXMPP):
 
     # Esta funcion la pueden usar para reenviar sus mensajes
     async def reply_message(self, msg):
-        await aprint(msg)
+        #await aprint(msg)
         message = msg.split('|')
-        await aprint(message)
+        #await aprint(message)
         if message[0] == '1':
             print('Este es el metodo de reenviar')
         elif message[0] == '2':
             print('Este es el metodo de update')
         elif message[0] == '3':
-            print('Este es el metodo de echo')
-            now = datetime.now()
-            timestamp = datetime.timestamp(now)
-            mensaje = msg + str(timestamp)
-            #msg.reply("Thanks for sending\n%(body)s" % msg).send()
-            self.send_message(
-                        mto=message[1],
-                        mbody=mensaje,
-                        mtype='chat' 
-                    )
+            #print('Este es el metodo de echo')
+            if message[6] == '':
+                now = datetime.now()
+                timestamp = datetime.timestamp(now)
+                mensaje = msg + str(timestamp)
+                self.send_message(
+                            mto=message[1],
+                            mbody=mensaje,
+                            mtype='chat' 
+                        )
+            else:
+                difference = float(message[6]) - float(message[4])
+                await aprint("La diferencia es de: ", difference)
         else:
             pass
 
