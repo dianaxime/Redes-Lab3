@@ -10,6 +10,7 @@ from aioconsole import aprint
 from datetime import datetime
 
 import slixmpp
+import networkx as nx
 
 ########################################################
 #
@@ -29,11 +30,12 @@ import slixmpp
 
 
 class Client(slixmpp.ClientXMPP):
-    def __init__(self, jid, password, nodo, nodes, names):
+    def __init__(self, jid, password, nodo, nodes, names, graph):
         super().__init__(jid, password)
         self.received = set()
         # self.topo = topo
         self.names = names
+        self.graph = graph
         # Cambio en vez de recibir toda la red recibe su nodo y nodos asociados
         self.nodo = nodo
         self.nodes = nodes
@@ -90,6 +92,8 @@ class Client(slixmpp.ClientXMPP):
             else:
                 difference = float(message[6]) - float(message[4])
                 await aprint("La diferencia es de: ", difference)
+                self.graph.nodes[message[5]]['distance'] = difference
+                print(self.graph.nodes.data())
         else:
             pass
 
@@ -99,7 +103,7 @@ class Client(slixmpp.ClientXMPP):
             # print(self.names[i])
             now = datetime.now()
             timestamp = datetime.timestamp(now)
-            mensaje = "3|" + str(self.jid) + "|" + str(self.names[i]) + "||"+ str(timestamp) +"||"
+            mensaje = "3|" + str(self.jid) + "|" + str(self.names[i]) + "||"+ str(timestamp) +"|" + str(i) + "|"
             self.send_message(
                         mto=self.names[i],
                         mbody=mensaje,

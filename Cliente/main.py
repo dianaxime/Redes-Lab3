@@ -13,6 +13,8 @@ from client import Client
 from aioconsole import ainput
 
 import yaml
+import networkx as nx
+import matplotlib.pyplot as plt
 
 # Funcion para cargar los archivos de configuracion
 def loadConfig():
@@ -26,12 +28,24 @@ def loadConfig():
 
 # Funcion para conocer mi nodo y sus nodos asociados
 def getNodes(topo, names, user):
-    nodos = []
     for key, value in names["config"].items():
         if user == value:
             #for i in topo["config"][key]:
             #    nodos.append({i: names["config"][i]})
             return key, topo["config"][key]
+
+def pruebaGrafo(topo, names):
+    G = nx.Graph()
+    for key, value in names["config"].items():
+        G.add_node(key, jid=value)
+        # G.nodes[key]['val'] = value
+        
+    for key, value in topo["config"].items():
+        for i in value:
+            G.add_edge(key, i)
+    
+    # print(G.nodes.data())
+    return G
     
 # Funcion para manejar el cliente
 async def main(xmpp: Client):
@@ -96,7 +110,12 @@ if __name__ == "__main__":
     #                    format='%(levelname)-8s %(message)s')
 
     nodo, nodes = getNodes(topo, names, opts.jid)
-    xmpp = Client(opts.jid, opts.password, nodo, nodes, names["config"])
+
+    graph = pruebaGrafo(topo, names)
+    subax1 = plt.subplot(121)
+    nx.draw(graph, with_labels=True, font_weight='bold')
+    plt.show()  
+    xmpp = Client(opts.jid, opts.password, nodo, nodes, names["config"], graph)
     xmpp.connect() 
     xmpp.loop.run_until_complete(xmpp.connected_event.wait())
     xmpp.loop.create_task(main(xmpp))
