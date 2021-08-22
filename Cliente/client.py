@@ -37,7 +37,8 @@ class Client(slixmpp.ClientXMPP):
         # Cambio en vez de recibir toda la red recibe su nodo y nodos asociados
         self.nodo = nodo
         self.nodes = nodes
-        self.schedule(name="menu", callback=self.menu, seconds=10, repeat=True)
+        self.schedule(name="echo", callback=self.echo_message, seconds=10, repeat=True)
+        self.schedule(name="update", callback=self.update_message, seconds=15, repeat=True)
         
         # Manejar los eventos
         self.connected_event = asyncio.Event()
@@ -82,7 +83,10 @@ class Client(slixmpp.ClientXMPP):
         else:
             pass
 
-    def menu(self):
-        print("schedule prueba")
+    def echo_message(self):
+        print("schedule prueba echo")
+
+    def update_message(self):
+        print("schedule prueba update")
 
     

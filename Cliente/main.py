@@ -26,18 +26,21 @@ def loadConfig():
 
 # Funcion para conocer mi nodo y sus nodos asociados
 def getNodes(topo, names, user):
+    nodos = []
     for key, value in names["config"].items():
         if user == value:
-            return key, topo["config"][key]
-
+            for i in topo["config"][key]:
+                nodos.append({i: names["config"][i]})
+        return key, nodos
+    
 # Funcion para manejar el cliente
 async def main(xmpp: Client):
     corriendo = True
     # print(xmpp.topo)
     # print(xmpp.names)
     # Cambio en vez de pasarle toda la red solo los nodos conectados
-    # print(xmpp.nodo)
-    # print(xmpp.nodes)
+    print(xmpp.nodo)
+    print(xmpp.nodes)
     while corriendo:
         print("""
         *************************************************
@@ -93,7 +96,6 @@ if __name__ == "__main__":
     #                    format='%(levelname)-8s %(message)s')
 
     nodo, nodes = getNodes(topo, names, opts.jid)
-
     xmpp = Client(opts.jid, opts.password, nodo, nodes)
     xmpp.connect() 
     xmpp.loop.run_until_complete(xmpp.connected_event.wait())
