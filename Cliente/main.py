@@ -70,6 +70,8 @@ async def main(xmpp: Client):
             while activo:
                 mensaje = await ainput("Mensaje... ")
                 if (mensaje != 'volver') and len(mensaje) > 0:
+                    if xmpp.algoritmo == '1':
+                        mensaje = "1|" + str(xmpp.jid) + "|" + str(destinatario) + str(xmpp.graph.number_of_nodes()) + "||" + str(xmpp.nodo) + "|" + str(mensaje)
                     xmpp.send_message(
                         mto=destinatario,
                         mbody=mensaje,
@@ -97,6 +99,8 @@ if __name__ == "__main__":
                     help="JID to use")
     optp.add_option("-p", "--password", dest="password",
                     help="password to use")
+    optp.add_option("-a", "--algoritmo", dest="algoritmo",
+                    help="algoritmo to use")
     
     opts, args = optp.parse_args()
 
@@ -104,7 +108,14 @@ if __name__ == "__main__":
     if opts.jid is None:
         opts.jid = input("Ingrese su nombre de usuario: ")
     if opts.password is None:
-        opts.password = getpass.getpass("Ingrese su contraseña: ")  
+        opts.password = getpass.getpass("Ingrese su contraseña: ")
+    if opts.algoritmo is None:
+        print("""
+            1. Flooding
+            2. Distance Vector Routing
+            3. Link State Routing
+        """)
+        opts.algoritmo = input("Ingrese el algoritmo seleccionado: ")  
 
     # logging.basicConfig(level=opts.loglevel,
     #                    format='%(levelname)-8s %(message)s')
@@ -112,10 +123,10 @@ if __name__ == "__main__":
     nodo, nodes = getNodes(topo, names, opts.jid)
 
     graph = pruebaGrafo(topo, names)
-    subax1 = plt.subplot(121)
-    nx.draw(graph, with_labels=True, font_weight='bold')
-    plt.show()  
-    xmpp = Client(opts.jid, opts.password, nodo, nodes, names["config"], graph)
+    # subax1 = plt.subplot(121)
+    # nx.draw(graph, with_labels=True, font_weight='bold')
+    # plt.show()  
+    xmpp = Client(opts.jid, opts.password, opts.algoritmo, nodo, nodes, names["config"], graph)
     xmpp.connect() 
     xmpp.loop.run_until_complete(xmpp.connected_event.wait())
     xmpp.loop.create_task(main(xmpp))

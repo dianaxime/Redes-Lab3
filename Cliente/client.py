@@ -22,6 +22,12 @@ import networkx as nx
 # 1. Reenviar
 # 2. Update
 # 3. ECO
+#
+# Pueden haber tres tipos de algoritmos:
+# 1. Flooding
+# 2. Distance Vector Routing
+# 3. Link State Routing
+#
 # EJ:
 # 1 | "dele18607@alumchat.xyz" | "gon18398@alumchat.xyz" | 5 | 10 | "A,B,C,D" | "Hola"
 #
@@ -30,9 +36,10 @@ import networkx as nx
 
 
 class Client(slixmpp.ClientXMPP):
-    def __init__(self, jid, password, nodo, nodes, names, graph):
+    def __init__(self, jid, password, algoritmo, nodo, nodes, names, graph):
         super().__init__(jid, password)
         self.received = set()
+        self.algoritmo = algoritmo
         # self.topo = topo
         self.names = names
         self.graph = graph
@@ -76,8 +83,18 @@ class Client(slixmpp.ClientXMPP):
         #await aprint(message)
         if message[0] == '1':
             print('Este es el metodo de reenviar')
+            if self.algoritmo == '1':
+                pass
+            elif self.algoritmo == '2':
+                pass
+            elif self.algoritmo == '3':
+                pass
         elif message[0] == '2':
             print('Este es el metodo de update')
+            if self.algoritmo == '2':
+                pass
+            elif self.algoritmo == '3':
+                pass
         elif message[0] == '3':
             #print('Este es el metodo de echo')
             if message[6] == '':
@@ -91,9 +108,9 @@ class Client(slixmpp.ClientXMPP):
                         )
             else:
                 difference = float(message[6]) - float(message[4])
-                await aprint("La diferencia es de: ", difference)
+                # await aprint("La diferencia es de: ", difference)
                 self.graph.nodes[message[5]]['distance'] = difference
-                print(self.graph.nodes.data())
+                # print(self.graph.nodes.data())
         else:
             pass
 
@@ -112,4 +129,8 @@ class Client(slixmpp.ClientXMPP):
 
     def update_message(self):
         #print("schedule prueba update")
-        pass
+        if self.algoritmo == '2':
+                pass
+        elif self.algoritmo == '3':
+            pass
+        
