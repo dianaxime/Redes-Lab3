@@ -29,14 +29,15 @@ import slixmpp
 
 
 class Client(slixmpp.ClientXMPP):
-    def __init__(self, jid, password, nodo, nodes):
+    def __init__(self, jid, password, nodo, nodes, names):
         super().__init__(jid, password)
         self.received = set()
         # self.topo = topo
-        # self.names = names
+        self.names = names
         # Cambio en vez de recibir toda la red recibe su nodo y nodos asociados
         self.nodo = nodo
         self.nodes = nodes
+        # self.nodos = nodos
         self.schedule(name="echo", callback=self.echo_message, seconds=10, repeat=True)
         self.schedule(name="update", callback=self.update_message, seconds=15, repeat=True)
         
@@ -84,9 +85,18 @@ class Client(slixmpp.ClientXMPP):
             pass
 
     def echo_message(self):
-        print("schedule prueba echo")
+        #print("schedule prueba echo")
+        for i in self.nodes:
+            print(self.names[i])
+            now = datetime.now()
+            timestamp = datetime.timestamp(now)
+            mensaje = "3|" + str(self.jid) + "|" + str(self.names[i]) + "||"+ str(timestamp) +"||"
+            self.send_message(
+                        mto=self.names[i],
+                        mbody=mensaje,
+                        mtype='chat' 
+                    )
 
     def update_message(self):
-        print("schedule prueba update")
-
-    
+        #print("schedule prueba update")
+        pass

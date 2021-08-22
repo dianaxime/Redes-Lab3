@@ -29,9 +29,9 @@ def getNodes(topo, names, user):
     nodos = []
     for key, value in names["config"].items():
         if user == value:
-            for i in topo["config"][key]:
-                nodos.append({i: names["config"][i]})
-        return key, nodos
+            #for i in topo["config"][key]:
+            #    nodos.append({i: names["config"][i]})
+            return key, topo["config"][key]
     
 # Funcion para manejar el cliente
 async def main(xmpp: Client):
@@ -39,8 +39,8 @@ async def main(xmpp: Client):
     # print(xmpp.topo)
     # print(xmpp.names)
     # Cambio en vez de pasarle toda la red solo los nodos conectados
-    print(xmpp.nodo)
-    print(xmpp.nodes)
+    #print(xmpp.nodo)
+    #print(xmpp.nodes)
     while corriendo:
         print("""
         *************************************************
@@ -96,7 +96,7 @@ if __name__ == "__main__":
     #                    format='%(levelname)-8s %(message)s')
 
     nodo, nodes = getNodes(topo, names, opts.jid)
-    xmpp = Client(opts.jid, opts.password, nodo, nodes)
+    xmpp = Client(opts.jid, opts.password, nodo, nodes, names["config"])
     xmpp.connect() 
     xmpp.loop.run_until_complete(xmpp.connected_event.wait())
     xmpp.loop.create_task(main(xmpp))

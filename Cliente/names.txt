@@ -2,7 +2,7 @@
     "type":"names",
     "config":{"A":"diana@alumchat.xyz", 
         "B":"ddeleon@alumchat.xyz", 
-        "C":"mnovella@alumchat.xyz", 
+        "C":"mvasquez@alumchat.xyz", 
         "D":"dele18607@alumchat.xyz",
     },
 }
