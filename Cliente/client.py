@@ -39,7 +39,7 @@ class Client(slixmpp.ClientXMPP):
         self.nodes = nodes
         # self.nodos = nodos
         self.schedule(name="echo", callback=self.echo_message, seconds=10, repeat=True)
-        self.schedule(name="update", callback=self.update_message, seconds=15, repeat=True)
+        #self.schedule(name="update", callback=self.update_message, seconds=15, repeat=True)
         
         # Manejar los eventos
         self.connected_event = asyncio.Event()
@@ -80,14 +80,20 @@ class Client(slixmpp.ClientXMPP):
             print('Este es el metodo de echo')
             now = datetime.now()
             timestamp = datetime.timestamp(now)
-            print("timestamp =", timestamp)
+            mensaje = msg + str(timestamp)
+            #msg.reply("Thanks for sending\n%(body)s" % msg).send()
+            self.send_message(
+                        mto=message[1],
+                        mbody=mensaje,
+                        mtype='chat' 
+                    )
         else:
             pass
 
     def echo_message(self):
         #print("schedule prueba echo")
         for i in self.nodes:
-            print(self.names[i])
+            # print(self.names[i])
             now = datetime.now()
             timestamp = datetime.timestamp(now)
             mensaje = "3|" + str(self.jid) + "|" + str(self.names[i]) + "||"+ str(timestamp) +"||"
