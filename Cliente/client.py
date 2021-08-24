@@ -3,7 +3,6 @@
 # Camila Gonzalez - 18398
 # Juan Fernando de Leon - 17822
 # Diana de Leon - 18607
-
 import asyncio
 import logging
 from aioconsole import aprint
@@ -48,7 +47,7 @@ class Client(slixmpp.ClientXMPP):
         self.nodes = nodes
         # self.nodos = nodos
         self.schedule(name="echo", callback=self.echo_message, seconds=10, repeat=True)
-        #self.schedule(name="update", callback=self.update_message, seconds=15, repeat=True)
+        self.schedule(name="update", callback=self.update_message, seconds=15, repeat=True)
         
         # Manejar los eventos
         self.connected_event = asyncio.Event()
@@ -146,7 +145,17 @@ class Client(slixmpp.ClientXMPP):
     def update_message(self):
         #print("schedule prueba update")
         if self.algoritmo == '2':
-                pass
-        elif self.algoritmo == '3':
             pass
+        elif self.algoritmo == '3':
+            StrNode = ",".join(self.node)
+            for i in self.names:
+                update_msg = "3|" + str(self.jid) + "|" + str(self.names[i]) + "|||" + StrNode + "|" 
+                self.send_message(
+                        mto=self.names[i],
+                        mbody=update_msg,
+                        mtype='chat' 
+                    )
+                self.graph.nodes[message[6]]['distance'] = difference
+            
         
+    
