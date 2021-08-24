@@ -127,12 +127,17 @@ if __name__ == "__main__":
     # logging.basicConfig(level=opts.loglevel,
     #                    format='%(levelname)-8s %(message)s')
 
+    print('topo', topo)
+    print('names', names)
+    print('opts.jid', opts.jid)
+
     nodo, nodes = getNodes(topo, names, opts.jid)
 
     graph = pruebaGrafo(topo, names)
     # subax1 = plt.subplot(121)
     # nx.draw(graph, with_labels=True, font_weight='bold')
     # plt.show()  
+
     xmpp = Client(opts.jid, opts.password, opts.algoritmo, nodo, nodes, names["config"], graph)
     xmpp.connect() 
     xmpp.loop.run_until_complete(xmpp.connected_event.wait())
