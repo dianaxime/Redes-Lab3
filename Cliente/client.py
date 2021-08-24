@@ -86,7 +86,7 @@ class Client(slixmpp.ClientXMPP):
                 if message[2] == self.jid:
                     print("Este mensaje es para mi >> " +  message[6])
                 else:
-                    if message[3] != '0':
+                    if int(message[3]) > 0:
                         lista = message[4].split(",")
                         if self.nodo not in lista:
                             message[4] = message[4] + "," + str(self.nodo)
