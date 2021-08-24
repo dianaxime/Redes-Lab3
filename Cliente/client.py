@@ -109,7 +109,31 @@ class Client(slixmpp.ClientXMPP):
             if self.algoritmo == '2':
                 pass
             elif self.algoritmo == '3':
-                pass
+                # Utilizar flooding para para verificar que el numero de saltos sea mayor a 0 
+                # que el mensaje no ha pasado por este nodo
+                if int(message[3]) > 0:
+                    lista = message[4].split(",")
+                    if self.nodo not in lista:
+                        message[4] = message[4] + "," + str(self.nodo)
+                        message[3] = str(int(message[3]) - 1)
+                        StrMessage = "|".join(message)
+                        StrNodes = str(self.nodo) + "," + ",".join(self.nodes)
+                        for i in self.nodes:
+                            update_msg = "3|" + str(self.jid) + "|" + str(self.names[i]) + "|" + str(self.graph.number_of_nodes()) + "||" + str(self.nodo) + "|" + StrNodes
+                            # Reenviar mensaje recibido del update del vecino
+                            self.send_message(
+                                mto=self.names[i],
+                                mbody=StrMessage,
+                                mtype='chat' 
+                            )
+                            # Enviar mi update de mis vecinos  
+                            self.send_message(
+                                    mto=self.names[i],
+                                    mbody=update_msg,
+                                    mtype='chat' 
+                                )
+                else:
+                    pass
         elif message[0] == '3':
             #print('Este es el metodo de echo')
             if message[6] == '':
