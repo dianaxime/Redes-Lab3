@@ -46,7 +46,7 @@ class Client(slixmpp.ClientXMPP):
         self.nodo = nodo
         self.nodes = nodes
         # self.nodos = nodos
-        self.schedule(name="echo", callback=self.echo_message, seconds=10, repeat=True)
+        self.schedule(name="echo", callback=self.echo_message, seconds=30, repeat=True)
         self.schedule(name="update", callback=self.update_message, seconds=15, repeat=True)
         
         # Manejar los eventos
@@ -124,7 +124,8 @@ class Client(slixmpp.ClientXMPP):
             else:
                 difference = float(message[6]) - float(message[4])
                 # await aprint("La diferencia es de: ", difference)
-                self.graph.nodes[message[5]]['distance'] = difference
+                # self.graph.nodes[message[5]]['distance'] = difference
+                self.graph.edges[self.node, message[5]]['weight'] = difference
                 # print(self.graph.nodes.data())
         else:
             pass
@@ -143,19 +144,19 @@ class Client(slixmpp.ClientXMPP):
                     )
 
     def update_message(self):
-        #print("schedule prueba update")
+        print("schedule prueba update")
         if self.algoritmo == '2':
             pass
         elif self.algoritmo == '3':
-            StrNode = ",".join(self.node)
-            for i in self.names:
-                update_msg = "3|" + str(self.jid) + "|" + str(self.names[i]) + "|||" + StrNode + "|" 
+            # Tipo | Nodo fuente | Nodo destino | Saltos | Distancia | Listado de nodos | Mensaje
+            StrNodes = str(self.nodo) + "," + ",".join(self.nodes)
+            for i in self.nodes:
+                update_msg = "3|" + str(self.jid) + "|" + str(self.names[i]) + "|" + str(self.graph.number_of_nodes()) + "||" + str(self.nodo) + "|" + StrNodes
                 self.send_message(
                         mto=self.names[i],
                         mbody=update_msg,
                         mtype='chat' 
                     )
-                self.graph.nodes[message[6]]['distance'] = difference
             
         
     
