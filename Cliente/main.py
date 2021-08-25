@@ -30,7 +30,7 @@ def loadConfig():
 def getNodes(topo, names, user):
     for key, value in names["config"].items():
         if user == value:
-            #for i in topo["config"][key]:
+            # for i in topo["config"][key]:
             #    nodos.append({i: names["config"][i]})
             return key, topo["config"][key]
 
@@ -133,14 +133,17 @@ if __name__ == "__main__":
 
     nodo, nodes = getNodes(topo, names, opts.jid)
 
+    print(nodo)
+    print(nodes)
+
     graph = pruebaGrafo(topo, names)
     # subax1 = plt.subplot(121)
     # nx.draw(graph, with_labels=True, font_weight='bold')
     # plt.show()  
 
-    xmpp = Client(opts.jid, opts.password, opts.algoritmo, nodo, nodes, names["config"], graph)
-    xmpp.connect() 
-    xmpp.loop.run_until_complete(xmpp.connected_event.wait())
-    xmpp.loop.create_task(main(xmpp))
-    xmpp.process(forever=False)
+    # xmpp = Client(opts.jid, opts.password, opts.algoritmo, nodo, nodes, names["config"], graph)
+    # xmpp.connect() 
+    # xmpp.loop.run_until_complete(xmpp.connected_event.wait())
+    # xmpp.loop.create_task(main(xmpp))
+    # xmpp.process(forever=False)
     
