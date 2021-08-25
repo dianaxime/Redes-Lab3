@@ -127,9 +127,9 @@ if __name__ == "__main__":
     # logging.basicConfig(level=opts.loglevel,
     #                    format='%(levelname)-8s %(message)s')
 
-    print('topo', topo)
-    print('names', names)
-    print('opts.jid', opts.jid)
+    # print('topo', topo)
+    # print('names', names)
+    # print('opts.jid', opts.jid)
 
     nodo, nodes = getNodes(topo, names, opts.jid)
 
