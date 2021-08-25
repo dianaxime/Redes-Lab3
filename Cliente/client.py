@@ -119,7 +119,7 @@ class Client(slixmpp.ClientXMPP):
                         StrMessage = "|".join(message)
                         StrNodes = str(self.nodo) + "," + ",".join(self.nodes)
                         for i in self.nodes:
-                            update_msg = "3|" + str(self.jid) + "|" + str(self.names[i]) + "|" + str(self.graph.number_of_nodes()) + "||" + str(self.nodo) + "|" + StrNodes
+                            update_msg = "2|" + str(self.jid) + "|" + str(self.names[i]) + "|" + str(self.graph.number_of_nodes()) + "||" + str(self.nodo) + "|" + StrNodes
                             # Reenviar mensaje recibido del update del vecino
                             self.send_message(
                                 mto=self.names[i],
@@ -175,7 +175,7 @@ class Client(slixmpp.ClientXMPP):
             # Tipo | Nodo fuente | Nodo destino | Saltos | Distancia | Listado de nodos | Mensaje
             StrNodes = str(self.nodo) + "," + ",".join(self.nodes)
             for i in self.nodes:
-                update_msg = "3|" + str(self.jid) + "|" + str(self.names[i]) + "|" + str(self.graph.number_of_nodes()) + "||" + str(self.nodo) + "|" + StrNodes
+                update_msg = "2|" + str(self.jid) + "|" + str(self.names[i]) + "|" + str(self.graph.number_of_nodes()) + "||" + str(self.nodo) + "|" + StrNodes
                 self.send_message(
                         mto=self.names[i],
                         mbody=update_msg,
