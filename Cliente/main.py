@@ -34,6 +34,19 @@ def getNodes(topo, names, user):
             #    nodos.append({i: names["config"][i]})
             return key, topo["config"][key]
 
+def getGraph(topo, names, user):
+    '''Build graph in python a dict'''
+    
+    graph = {}
+
+    for key, value in topo['config'].items():
+        graph[key] = {}
+        for node in value:
+            graph[key][node] = 1 # Assume every edge has a weight of 1
+    
+    return graph
+
+
 def pruebaGrafo(topo, names):
     G = nx.Graph()
     for key, value in names["config"].items():
@@ -131,19 +144,19 @@ if __name__ == "__main__":
     # print('names', names)
     # print('opts.jid', opts.jid)
 
+    graph_dict = getGraph(topo, names, user=opts.jid)
+
     nodo, nodes = getNodes(topo, names, opts.jid)
 
-    print(nodo)
-    print(nodes)
-
     graph = pruebaGrafo(topo, names)
+
     # subax1 = plt.subplot(121)
     # nx.draw(graph, with_labels=True, font_weight='bold')
     # plt.show()  
 
-    # xmpp = Client(opts.jid, opts.password, opts.algoritmo, nodo, nodes, names["config"], graph)
-    # xmpp.connect() 
-    # xmpp.loop.run_until_complete(xmpp.connected_event.wait())
-    # xmpp.loop.create_task(main(xmpp))
-    # xmpp.process(forever=False)
+    xmpp = Client(opts.jid, opts.password, opts.algoritmo, nodo, nodes, names["config"], graph)
+    xmpp.connect() 
+    xmpp.loop.run_until_complete(xmpp.connected_event.wait())
+    xmpp.loop.create_task(main(xmpp))
+    xmpp.process(forever=False)
     
