@@ -3,6 +3,7 @@
 # Camila Gonzalez - 18398
 # Juan Fernando de Leon - 17822
 # Diana de Leon - 18607
+from Cliente.distanceVectorRouting import DistanceVectorRouting
 import asyncio
 import logging
 from aioconsole import aprint
@@ -35,13 +36,14 @@ import networkx as nx
 
 
 class Client(slixmpp.ClientXMPP):
-    def __init__(self, jid, password, algoritmo, nodo, nodes, names, graph):
+    def __init__(self, jid, password, algoritmo, nodo, nodes, names, graph, graph_dict, source):
         super().__init__(jid, password)
         self.received = set()
         self.algoritmo = algoritmo
         # self.topo = topo
         self.names = names
         self.graph = graph
+        self.dvr = DistanceVectorRouting(graph_dict, source, names)
         # Cambio en vez de recibir toda la red recibe su nodo y nodos asociados
         self.nodo = nodo
         self.nodes = nodes

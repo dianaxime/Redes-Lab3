@@ -4,6 +4,7 @@
 # Juan Fernando de Leon - 17822
 # Diana de Leon - 18607
 
+from distanceVectorRouting import DistanceVectorRouting
 import logging
 import getpass
 from aioconsole.stream import aprint
@@ -38,13 +39,16 @@ def getGraph(topo, names, user):
     '''Build graph in python a dict'''
     
     graph = {}
+    source = None
 
     for key, value in topo['config'].items():
         graph[key] = {}
         for node in value:
-            graph[key][node] = 1 # Assume every edge has a weight of 1
+            graph[key][node] = float('inf') # We dont know the weights yet
+            if names['config'][node] == user:
+                source = node
     
-    return graph
+    return graph, source
 
 
 def pruebaGrafo(topo, names):
@@ -144,7 +148,7 @@ if __name__ == "__main__":
     # print('names', names)
     # print('opts.jid', opts.jid)
 
-    graph_dict = getGraph(topo, names, user=opts.jid)
+    graph_dict, source = getGraph(topo, names, user=opts.jid)
 
     nodo, nodes = getNodes(topo, names, opts.jid)
 
@@ -154,7 +158,7 @@ if __name__ == "__main__":
     # nx.draw(graph, with_labels=True, font_weight='bold')
     # plt.show()  
 
-    xmpp = Client(opts.jid, opts.password, opts.algoritmo, nodo, nodes, names["config"], graph)
+    xmpp = Client(opts.jid, opts.password, opts.algoritmo, nodo, nodes, names["config"], graph, graph_dict, source)
     xmpp.connect() 
     xmpp.loop.run_until_complete(xmpp.connected_event.wait())
     xmpp.loop.create_task(main(xmpp))
