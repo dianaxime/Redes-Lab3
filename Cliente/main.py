@@ -42,7 +42,7 @@ def pruebaGrafo(topo, names):
         
     for key, value in topo["config"].items():
         for i in value:
-            G.add_edge(key, i)
+            G.add_edge(key, i, weight=1)
     
     # print(G.nodes.data())
     return G
