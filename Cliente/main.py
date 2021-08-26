@@ -52,7 +52,7 @@ def getGraph(topo, names, user):
 
 
 def pruebaGrafo(topo, names):
-    G = nx.Graph()
+    G = nx.DiGraph()
     for key, value in names["config"].items():
         G.add_node(key, jid=value)
         # G.nodes[key]['val'] = value
@@ -94,7 +94,17 @@ async def main(xmpp: Client):
                                 mto=xmpp.names[i],
                                 mbody=mensaje,
                                 mtype='chat' 
-                            )  
+                            )
+                    elif xmpp.algoritmo == '3':
+                        target = [x for x in xmpp.graph.nodes().data() if x[1]["jid"] == destinatario]
+                        mensaje = "1|" + str(xmpp.jid) + "|" + str(destinatario) + "|" + str(xmpp.graph.number_of_nodes()) + "||" + str(xmpp.nodo) + "|" + str(mensaje)
+                        shortest = nx.shortest_path(xmpp.graph, source=xmpp.nodo, target=target[0][0])
+                        if len(shortest) > 0:
+                            xmpp.send_message(
+                                mto=xmpp.names[shortest[1]],
+                                mbody=mensaje,
+                                mtype='chat' 
+                            )
                     else:
                         xmpp.send_message(
                             mto=destinatario,
@@ -154,9 +164,9 @@ if __name__ == "__main__":
 
     graph = pruebaGrafo(topo, names)
 
-    # subax1 = plt.subplot(121)
-    # nx.draw(graph, with_labels=True, font_weight='bold')
-    # plt.show()  
+    subax1 = plt.subplot(121)
+    nx.draw(graph, with_labels=True, font_weight='bold')
+    plt.show()  
 
     xmpp = Client(opts.jid, opts.password, opts.algoritmo, nodo, nodes, names["config"], graph, graph_dict, source)
     xmpp.connect() 

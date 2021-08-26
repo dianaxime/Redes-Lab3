@@ -3,6 +3,6 @@
     "config":{"A":"diana@alumchat.xyz", 
         "B":"ddeleon@alumchat.xyz", 
         "C":"gon18398@alumchat.xyz", 
-        "D":"dele18607@alumchat.xyz",
+        "D":"vas18250@alumchat.xyz",
     },
 }

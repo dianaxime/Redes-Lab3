@@ -107,7 +107,25 @@ class Client(slixmpp.ClientXMPP):
             elif self.algoritmo == '2':
                 pass
             elif self.algoritmo == '3':
-                pass
+                if message[2] == self.jid:
+                    print("Este mensaje es para mi >> " +  message[6])
+                else:
+                    if int(message[3]) > 0:
+                        lista = message[4].split(",")
+                        if self.nodo not in lista:
+                            message[4] = message[4] + "," + str(self.nodo)
+                            message[3] = str(int(message[3]) - 1)
+                            StrMessage = "|".join(message)
+                            target = [x for x in self.graph.nodes().data() if x[1]["jid"] == message[2]]
+                            shortest = nx.shortest_path(self.graph, source=self.nodo, target=target[0][0])
+                            if len(shortest) > 0:
+                                self.send_message(
+                                    mto=self.names[shortest[1]],
+                                    mbody=StrMessage,
+                                    mtype='chat' 
+                                )  
+                    else:
+                        pass
         elif message[0] == '2':
             print('Este es el metodo de update')
             if self.algoritmo == '2':
@@ -150,7 +168,7 @@ class Client(slixmpp.ClientXMPP):
                         # print(aristas)
                         self.graph.add_nodes_from(nodos)
                         self.graph.add_weighted_edges_from(aristas)
-                        print(self.graph.edges.data())
+                        # print(self.graph.edges.data())
                 else:
                     pass
         elif message[0] == '3':
