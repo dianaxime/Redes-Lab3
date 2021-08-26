@@ -3,7 +3,7 @@
 # Camila Gonzalez - 18398
 # Juan Fernando de Leon - 17822
 # Diana de Leon - 18607
-from Cliente.distanceVectorRouting import DistanceVectorRouting
+from distanceVectorRouting import DistanceVectorRouting
 import asyncio
 import logging
 from aioconsole import aprint
@@ -11,6 +11,8 @@ from datetime import datetime
 
 import slixmpp
 import networkx as nx
+import matplotlib.pyplot as plt
+import ast
 
 ########################################################
 #
@@ -48,8 +50,8 @@ class Client(slixmpp.ClientXMPP):
         self.nodo = nodo
         self.nodes = nodes
         # self.nodos = nodos
-        self.schedule(name="echo", callback=self.echo_message, seconds=30, repeat=True)
-        self.schedule(name="update", callback=self.update_message, seconds=15, repeat=True)
+        self.schedule(name="echo", callback=self.echo_message, seconds=5, repeat=True)
+        #self.schedule(name="update", callback=self.update_message, seconds=10, repeat=True)
         
         # Manejar los eventos
         self.connected_event = asyncio.Event()
@@ -118,8 +120,12 @@ class Client(slixmpp.ClientXMPP):
                     if self.nodo not in lista:
                         message[4] = message[4] + "," + str(self.nodo)
                         message[3] = str(int(message[3]) - 1)
+                        esquemaRecibido = message[6]
                         StrMessage = "|".join(message)
-                        StrNodes = str(self.nodo) + "," + ",".join(self.nodes)
+                        # Mi esquema de mis vecinos
+                        dataneighbors = [x for x in self.graph.nodes().data() if x[0] in self.nodes]
+                        dataedges = [x for x in self.graph.edges.data('weight') if x[0]== self.nodo]
+                        StrNodes = str(dataneighbors) + "-" + str(dataedges)
                         for i in self.nodes:
                             update_msg = "2|" + str(self.jid) + "|" + str(self.names[i]) + "|" + str(self.graph.number_of_nodes()) + "||" + str(self.nodo) + "|" + StrNodes
                             # Reenviar mensaje recibido del update del vecino
@@ -134,6 +140,17 @@ class Client(slixmpp.ClientXMPP):
                                     mbody=update_msg,
                                     mtype='chat' 
                                 )
+                        
+                        # Actualizar tabla
+                        print(esquemaRecibido)
+                        divido = esquemaRecibido.split('-')
+                        nodos = ast.literal_eval(divido[0])
+                        aristas = ast.literal_eval(divido[1])
+                        print(nodos)
+                        print(aristas)
+                        self.graph.add_nodes_from(nodos)
+                        self.graph.add_weighted_edges_from(aristas)
+                        #print(self.graph.edges().data())
                 else:
                     pass
         elif message[0] == '3':
@@ -150,9 +167,7 @@ class Client(slixmpp.ClientXMPP):
             else:
                 difference = float(message[6]) - float(message[4])
                 # await aprint("La diferencia es de: ", difference)
-                # self.graph.nodes[message[5]]['distance'] = difference
-                self.graph.edges[self.node, message[5]]['weight'] = difference
-                # print(self.graph.nodes.data())
+                self.graph[self.nodo][message[5]]['weight'] = difference
         else:
             pass
 
@@ -175,7 +190,11 @@ class Client(slixmpp.ClientXMPP):
             pass
         elif self.algoritmo == '3':
             # Tipo | Nodo fuente | Nodo destino | Saltos | Distancia | Listado de nodos | Mensaje
-            StrNodes = str(self.nodo) + "," + ",".join(self.nodes)
+            # Esquema de mis vecinos
+            dataneighbors = [x for x in self.graph.nodes().data() if x[0] in self.nodes]
+            dataedges = [x for x in self.graph.edges.data('weight') if x[0]== self.nodo]
+            StrNodes = str(dataneighbors) + "-" + str(dataedges)
+            #print(StrNodes)
             for i in self.nodes:
                 update_msg = "2|" + str(self.jid) + "|" + str(self.names[i]) + "|" + str(self.graph.number_of_nodes()) + "||" + str(self.nodo) + "|" + StrNodes
                 self.send_message(
