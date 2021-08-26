@@ -51,7 +51,7 @@ class Client(slixmpp.ClientXMPP):
         self.nodes = nodes
         # self.nodos = nodos
         self.schedule(name="echo", callback=self.echo_message, seconds=5, repeat=True)
-        #self.schedule(name="update", callback=self.update_message, seconds=10, repeat=True)
+        self.schedule(name="update", callback=self.update_message, seconds=10, repeat=True)
         
         # Manejar los eventos
         self.connected_event = asyncio.Event()
@@ -124,7 +124,7 @@ class Client(slixmpp.ClientXMPP):
                         StrMessage = "|".join(message)
                         # Mi esquema de mis vecinos
                         dataneighbors = [x for x in self.graph.nodes().data() if x[0] in self.nodes]
-                        dataedges = [x for x in self.graph.edges.data('weight') if x[0]== self.nodo]
+                        dataedges = [x for x in self.graph.edges.data('weight') if x[1] in self.nodes and x[0]==self.nodo]
                         StrNodes = str(dataneighbors) + "-" + str(dataedges)
                         for i in self.nodes:
                             update_msg = "2|" + str(self.jid) + "|" + str(self.names[i]) + "|" + str(self.graph.number_of_nodes()) + "||" + str(self.nodo) + "|" + StrNodes
@@ -142,15 +142,15 @@ class Client(slixmpp.ClientXMPP):
                                 )
                         
                         # Actualizar tabla
-                        print(esquemaRecibido)
+                        # print(esquemaRecibido)
                         divido = esquemaRecibido.split('-')
                         nodos = ast.literal_eval(divido[0])
                         aristas = ast.literal_eval(divido[1])
-                        print(nodos)
-                        print(aristas)
+                        # print(nodos)
+                        # print(aristas)
                         self.graph.add_nodes_from(nodos)
                         self.graph.add_weighted_edges_from(aristas)
-                        #print(self.graph.edges().data())
+                        print(self.graph.edges.data())
                 else:
                     pass
         elif message[0] == '3':
@@ -192,7 +192,7 @@ class Client(slixmpp.ClientXMPP):
             # Tipo | Nodo fuente | Nodo destino | Saltos | Distancia | Listado de nodos | Mensaje
             # Esquema de mis vecinos
             dataneighbors = [x for x in self.graph.nodes().data() if x[0] in self.nodes]
-            dataedges = [x for x in self.graph.edges.data('weight') if x[0]== self.nodo]
+            dataedges = [x for x in self.graph.edges.data('weight') if x[1] in self.nodes and x[0]==self.nodo]
             StrNodes = str(dataneighbors) + "-" + str(dataedges)
             #print(StrNodes)
             for i in self.nodes:
