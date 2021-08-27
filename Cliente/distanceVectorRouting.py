@@ -59,6 +59,7 @@ class DistanceVectorRouting():
     def update_graph(self, graph_dict):
         '''Update graph_dict'''
         # ! TODO: Cambiar el formato del diccionario
+        print(graph_dict)
         self.graph_dict = graph_dict
         self.distance, self.predecessor = self.bellman_ford(graph_dict, self.source)
         self.neighbors = self.get_neighbors(graph_dict, self.source)

@@ -152,7 +152,7 @@ class Client(slixmpp.ClientXMPP):
                     else:
                         pass
         elif message[0] == '2':
-            # print('Actualizando informacion...')
+            print('Actualizando informacion...')
             if self.algoritmo == '2':
                 esquemaRecibido = message[6]
 
@@ -255,7 +255,7 @@ class Client(slixmpp.ClientXMPP):
                     )
 
     def update_message(self):
-        # print("Actualizacion programada...")
+        print("Actualizacion programada...")
         if self.algoritmo == '2':
             
             # Enviar todo el grafo
@@ -268,7 +268,7 @@ class Client(slixmpp.ClientXMPP):
                 update_msg = "2|" + str(self.jid) + "|" + str(self.names[i]) + "|" + str(self.graph.number_of_nodes()) + "||" + str(self.nodo) + "|" + StrNodes
                 # Enviar mi update de mis vecinos  
                 self.send_message(
-                        mto=self.dvr.names['config'][i],
+                        mto=self.dvr.names[i],
                         mbody=update_msg,
                         mtype='chat'
                     )
