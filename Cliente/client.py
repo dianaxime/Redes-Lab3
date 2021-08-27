@@ -85,17 +85,21 @@ class Client(slixmpp.ClientXMPP):
         message = msg.split('|')
         #await aprint(message)
         if message[0] == '1':
-            print('Este es el metodo de reenviar')
+            # print('Envio de mensajes')
             if self.algoritmo == '1':
+                # Verificar si el mensaje es para mi
                 if message[2] == self.jid:
                     print("Este mensaje es para mi >> " +  message[6])
                 else:
+                    # Verificar que aun es valido enviar el mensaje (mayor a 0)
                     if int(message[3]) > 0:
                         lista = message[4].split(",")
+                        # verificar que no ha pasado por mi ese mensaje
                         if self.nodo not in lista:
                             message[4] = message[4] + "," + str(self.nodo)
                             message[3] = str(int(message[3]) - 1)
                             StrMessage = "|".join(message)
+                            # Reenviar a mis vecinos
                             for i in self.nodes:
                                 self.send_message(
                                     mto=self.names[i],
@@ -110,8 +114,11 @@ class Client(slixmpp.ClientXMPP):
                 if message[2] == self.jid:
                     print("Este mensaje es para mi >> " +  message[6])
                 else:
+                    # Si la cuenta no ha llegado a 0
                     if int(message[3]) > 0:
                         lista = message[4].split(",")
+                        # Y si el mensaje no ha pasado por mi entonces lo reenvio
+                        # por el camino mas corto
                         if self.nodo not in lista:
                             message[4] = message[4] + "," + str(self.nodo)
                             message[3] = str(int(message[3]) - 1)
@@ -127,7 +134,7 @@ class Client(slixmpp.ClientXMPP):
                     else:
                         pass
         elif message[0] == '2':
-            print('Este es el metodo de update')
+            # print('Actualizando informacion...')
             if self.algoritmo == '2':
                 pass
             elif self.algoritmo == '3':
@@ -172,7 +179,7 @@ class Client(slixmpp.ClientXMPP):
                 else:
                     pass
         elif message[0] == '3':
-            #print('Este es el metodo de echo')
+            # print('Echo a mis vecinos...')
             if message[6] == '':
                 now = datetime.now()
                 timestamp = datetime.timestamp(now)
@@ -190,7 +197,7 @@ class Client(slixmpp.ClientXMPP):
             pass
 
     def echo_message(self):
-        #print("schedule prueba echo")
+        # print("ECHO programado...")
         for i in self.nodes:
             # print(self.names[i])
             now = datetime.now()
@@ -203,7 +210,7 @@ class Client(slixmpp.ClientXMPP):
                     )
 
     def update_message(self):
-        print("schedule prueba update")
+        # print("Actualizacion programada...")
         if self.algoritmo == '2':
             pass
         elif self.algoritmo == '3':

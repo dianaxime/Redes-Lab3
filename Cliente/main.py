@@ -164,9 +164,9 @@ if __name__ == "__main__":
 
     graph = pruebaGrafo(topo, names)
 
-    subax1 = plt.subplot(121)
-    nx.draw(graph, with_labels=True, font_weight='bold')
-    plt.show()  
+    # subax1 = plt.subplot(121)
+    # nx.draw(graph, with_labels=True, font_weight='bold')
+    # plt.show()  
 
     xmpp = Client(opts.jid, opts.password, opts.algoritmo, nodo, nodes, names["config"], graph, graph_dict, source)
     xmpp.connect() 
