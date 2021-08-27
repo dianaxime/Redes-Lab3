@@ -45,7 +45,7 @@ class Client(slixmpp.ClientXMPP):
         # self.topo = topo
         self.names = names
         self.graph = graph
-        self.dvr = DistanceVectorRouting(graph_dict, source, names)
+        self.dvr = DistanceVectorRouting(graph, graph_dict, source, names)
         # Cambio en vez de recibir toda la red recibe su nodo y nodos asociados
         self.nodo = nodo
         self.nodes = nodes
@@ -109,7 +109,25 @@ class Client(slixmpp.ClientXMPP):
                     else:
                         pass
             elif self.algoritmo == '2':
-                pass
+                # Verificar si el mensaje es para mi
+                if message[2] == self.jid:
+                    print("Este mensaje es para mi >> " +  message[6])
+                else:
+                    # Enviar el mensaje por la ruta mas corta
+                    shortest_neighbor_node = self.dvr.shortest_path(message[2])
+                    if shortest_neighbor_node: # If we have a path
+                        if shortest_neighbor_node[1] in self.dvr.neighbors: # And is in our neighbors list
+                            # We send the message
+                            StrMessage = "|".join(message)
+                            self.send_message(
+                                mto=message[2],
+                                mbody=StrMessage,
+                                mtype='chat' 
+                            )
+                        else:
+                            pass
+                    else:
+                        pass
             elif self.algoritmo == '3':
                 if message[2] == self.jid:
                     print("Este mensaje es para mi >> " +  message[6])

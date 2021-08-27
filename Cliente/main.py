@@ -53,6 +53,8 @@ def getGraph(topo, names, user):
 
 def pruebaGrafo(topo, names):
     G = nx.DiGraph()
+    G.add_nodes_from(G.nodes(data=True))
+    G.add_edges_from(G.edges(data=True))
     for key, value in names["config"].items():
         G.add_node(key, jid=value)
         # G.nodes[key]['val'] = value
@@ -168,9 +170,15 @@ if __name__ == "__main__":
     # nx.draw(graph, with_labels=True, font_weight='bold')
     # plt.show()  
 
-    xmpp = Client(opts.jid, opts.password, opts.algoritmo, nodo, nodes, names["config"], graph, graph_dict, source)
-    xmpp.connect() 
-    xmpp.loop.run_until_complete(xmpp.connected_event.wait())
-    xmpp.loop.create_task(main(xmpp))
-    xmpp.process(forever=False)
+    dvr = DistanceVectorRouting(graph, graph_dict, source, names)
+
+    path = dvr.shortest_path('gon18398@alumchat.xyz')
+    print(dvr.neighbors)
+    print(path[1] in dvr.neighbors)
+
+    # xmpp = Client(opts.jid, opts.password, opts.algoritmo, nodo, nodes, names["config"], graph, graph_dict, source)
+    # xmpp.connect() 
+    # xmpp.loop.run_until_complete(xmpp.connected_event.wait())
+    # xmpp.loop.create_task(main(xmpp))
+    # xmpp.process(forever=False)
     
