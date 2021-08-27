@@ -154,7 +154,25 @@ class Client(slixmpp.ClientXMPP):
         elif message[0] == '2':
             # print('Actualizando informacion...')
             if self.algoritmo == '2':
-                pass
+                esquemaRecibido = message[6]
+                dataneighbors = [x for x in self.graph.nodes().data() if x[0] in self.nodes]
+                dataedges = [x for x in self.graph.edges.data('weight') if x[1] in self.nodes and x[0]==self.nodo]
+                StrNodes = str(dataneighbors) + "-" + str(dataedges)
+                for i in self.dvr.neighbors:
+                    update_msg = "2|" + str(self.jid) + "|" + str(self.names[i]) + "|" + str(self.graph.number_of_nodes()) + "||" + str(self.nodo) + "|" + StrNodes
+                    # Enviar mi update de mis vecinos  
+                    self.send_message(
+                            mto=self.dvr.names['config'][i],
+                            mbody=update_msg,
+                            mtype='chat'
+                        )
+                # Actualizar tabla
+                divido = esquemaRecibido.split('-')
+                nodos = ast.literal_eval(divido[0])
+                aristas = ast.literal_eval(divido[1])
+                self.graph.add_nodes_from(nodos)
+                self.graph.add_weighted_edges_from(aristas)
+                
             elif self.algoritmo == '3':
                 # Utilizar flooding para para verificar que el numero de saltos sea mayor a 0 
                 # que el mensaje no ha pasado por este nodo
@@ -229,9 +247,7 @@ class Client(slixmpp.ClientXMPP):
 
     def update_message(self):
         # print("Actualizacion programada...")
-        if self.algoritmo == '2':
-            pass
-        elif self.algoritmo == '3':
+        if self.algoritmo == '2' or self.algoritmo == '3':
             # Tipo | Nodo fuente | Nodo destino | Saltos | Distancia | Listado de nodos | Mensaje
             # Esquema de mis vecinos
             dataneighbors = [x for x in self.graph.nodes().data() if x[0] in self.nodes]
