@@ -187,15 +187,15 @@ if __name__ == "__main__":
     # nx.draw(graph, with_labels=True, font_weight='bold')
     # plt.show()  
 
-    dvr = DistanceVectorRouting(graph, graph_dict, source, names)
+    # dvr = DistanceVectorRouting(graph, graph_dict, source, names)
 
-    path = dvr.shortest_path('gon18398@alumchat.xyz')
-    print(dvr.neighbors)
-    print(path[1] in dvr.neighbors)
+    # path = dvr.shortest_path('gon18398@alumchat.xyz')
+    # print(dvr.neighbors)
+    # print(path[1] in dvr.neighbors)
 
-    # xmpp = Client(opts.jid, opts.password, opts.algoritmo, nodo, nodes, names["config"], graph, graph_dict, source)
-    # xmpp.connect() 
-    # xmpp.loop.run_until_complete(xmpp.connected_event.wait())
-    # xmpp.loop.create_task(main(xmpp))
-    # xmpp.process(forever=False)
+    xmpp = Client(opts.jid, opts.password, opts.algoritmo, nodo, nodes, names["config"], graph, graph_dict, source)
+    xmpp.connect() 
+    xmpp.loop.run_until_complete(xmpp.connected_event.wait())
+    xmpp.loop.create_task(main(xmpp))
+    xmpp.process(forever=False)
     
