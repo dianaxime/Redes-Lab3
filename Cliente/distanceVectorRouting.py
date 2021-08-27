@@ -58,7 +58,6 @@ class DistanceVectorRouting():
 
     def update_graph(self, graph_dict):
         '''Update graph_dict'''
-        # ! TODO: Cambiar el formato del diccionario
 
         updated_graph = {}
 
@@ -67,9 +66,9 @@ class DistanceVectorRouting():
             for neighbor_node in graph_dict[node]:
                 updated_graph[node][neighbor_node] = graph_dict[node][neighbor_node]['weight']
 
-        self.graph_dict = graph_dict
-        self.distance, self.predecessor = self.bellman_ford(graph_dict, self.source)
-        self.neighbors = self.get_neighbors(graph_dict, self.source)
+        self.graph_dict = updated_graph
+        self.distance, self.predecessor = self.bellman_ford(updated_graph, self.source)
+        self.neighbors = self.get_neighbors(updated_graph, self.source)
 
     def shortest_path(self, target):
         '''Find shortest path'''
