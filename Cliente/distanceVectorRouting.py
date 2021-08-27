@@ -65,8 +65,8 @@ class DistanceVectorRouting():
 
     def shortest_path(self, target):
         '''Find shortest path'''
-        for key in self.names['config']:
-            if self.names['config'][key] == target:
+        for key in self.names:
+            if self.names[key] == target:
                 return nx.bellman_ford_path(self.graph, self.source, key)
         return None
 
