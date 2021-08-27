@@ -12,6 +12,8 @@ You need `Python 3.7.3` installed and the python libraries listed:
 pip install slixmpp
 pip install xmpppy
 pip install networkx
+pip install aioconsole
+pip install pyyaml
 ```
 
 ## Usage
