@@ -155,9 +155,23 @@ class Client(slixmpp.ClientXMPP):
             # print('Actualizando informacion...')
             if self.algoritmo == '2':
                 esquemaRecibido = message[6]
-                dataneighbors = [x for x in self.graph.nodes().data() if x[0] in self.nodes]
-                dataedges = [x for x in self.graph.edges.data('weight') if x[1] in self.nodes and x[0]==self.nodo]
+
+                # Actualizar tabla
+                divido = esquemaRecibido.split('-')
+                nodos = ast.literal_eval(divido[0])
+                aristas = ast.literal_eval(divido[1])
+                self.graph.add_nodes_from(nodos)
+                self.graph.add_weighted_edges_from(aristas)
+
+                # Actualizar DVR
+                self.dvr.update_graph(nx.to_dict_of_dicts(self.graph))
+
+                # Enviar todo el grafo
+                dataneighbors = self.graph.nodes().data()
+                dataedges = self.graph.edges.data('weight')
                 StrNodes = str(dataneighbors) + "-" + str(dataedges)
+
+                # Se lo enviamos solo a los vecinos
                 for i in self.dvr.neighbors:
                     update_msg = "2|" + str(self.jid) + "|" + str(self.names[i]) + "|" + str(self.graph.number_of_nodes()) + "||" + str(self.nodo) + "|" + StrNodes
                     # Enviar mi update de mis vecinos  
@@ -166,12 +180,7 @@ class Client(slixmpp.ClientXMPP):
                             mbody=update_msg,
                             mtype='chat'
                         )
-                # Actualizar tabla
-                divido = esquemaRecibido.split('-')
-                nodos = ast.literal_eval(divido[0])
-                aristas = ast.literal_eval(divido[1])
-                self.graph.add_nodes_from(nodos)
-                self.graph.add_weighted_edges_from(aristas)
+                
                 
             elif self.algoritmo == '3':
                 # Utilizar flooding para para verificar que el numero de saltos sea mayor a 0 
@@ -247,7 +256,24 @@ class Client(slixmpp.ClientXMPP):
 
     def update_message(self):
         # print("Actualizacion programada...")
-        if self.algoritmo == '2' or self.algoritmo == '3':
+        if self.algoritmo == '2':
+            
+            # Enviar todo el grafo
+            dataneighbors = self.graph.nodes().data()
+            dataedges = self.graph.edges.data('weight')
+            StrNodes = str(dataneighbors) + "-" + str(dataedges)
+
+            # Se lo enviamos solo a los vecinos
+            for i in self.dvr.neighbors:
+                update_msg = "2|" + str(self.jid) + "|" + str(self.names[i]) + "|" + str(self.graph.number_of_nodes()) + "||" + str(self.nodo) + "|" + StrNodes
+                # Enviar mi update de mis vecinos  
+                self.send_message(
+                        mto=self.dvr.names['config'][i],
+                        mbody=update_msg,
+                        mtype='chat'
+                    )
+            
+        elif self.algoritmo == '3':
             # Tipo | Nodo fuente | Nodo destino | Saltos | Distancia | Listado de nodos | Mensaje
             # Esquema de mis vecinos
             dataneighbors = [x for x in self.graph.nodes().data() if x[0] in self.nodes]

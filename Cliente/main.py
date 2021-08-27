@@ -97,6 +97,23 @@ async def main(xmpp: Client):
                                 mbody=mensaje,
                                 mtype='chat' 
                             )
+                    elif xmpp.algoritmo == '2':
+                        # Enviar el mensaje por la ruta mas corta
+                        mensaje = "1|" + str(xmpp.jid) + "|" + str(destinatario) + "|" + str(xmpp.graph.number_of_nodes()) + "||" + str(xmpp.nodo) + "|" + str(mensaje)
+                        shortest_neighbor_node = xmpp.dvr.shortest_path(destinatario)
+                        if shortest_neighbor_node: # If we have a path
+                            if shortest_neighbor_node[1] in xmpp.dvr.neighbors: # And is in our neighbors list
+                                # We send the message
+                                xmpp.send_message(
+                                    mto=xmpp.names[shortest_neighbor_node[1]],
+                                    mbody=mensaje,
+                                    mtype='chat' 
+                                )
+                            else:
+                                pass
+                        else:
+                            pass
+
                     elif xmpp.algoritmo == '3':
                         target = [x for x in xmpp.graph.nodes().data() if x[1]["jid"] == destinatario]
                         mensaje = "1|" + str(xmpp.jid) + "|" + str(destinatario) + "|" + str(xmpp.graph.number_of_nodes()) + "||" + str(xmpp.nodo) + "|" + str(mensaje)
